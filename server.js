@@ -4,7 +4,7 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var jwt = require('jsonwebtoken');
-var Movie = require('/Movies');
+var Movie = require('./Movies');
 
 var app = express();
 module.exports = app; // for testing
@@ -32,7 +32,6 @@ router.route('/users/:userId')
         var id = req.params.userId;
         User.findById(id, function(err, user) {
             if (err) res.send(err);
-
             var userJson = JSON.stringify(user);
             // return that user
             res.json(user);
@@ -93,8 +92,3 @@ router.post('/signin', function(req, res) {
         });
     });
 });
-
-
-
-app.use('/', router);
-app.listen(process.env.PORT || 7000);
