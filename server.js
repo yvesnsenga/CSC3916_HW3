@@ -92,3 +92,46 @@ router.post('/signin', function(req, res) {
         });
     });
 });
+
+router.route('/Movies')
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        var movies = new Movie();
+        movies.title = req.body.title;
+        movies.YearRelease = req.body.YearRelease;
+        movies.genre = req.body.genre;
+        movies.Actor = [{
+            Actorname : req.body.Actorname,
+            CharacterName : req.body.CharacterName
+        }];
+        movies.save(function (err) {
+            if (err) {
+                if (err.Code == 11000)
+                    return res.JSON({success: false, message: 'A movie with that name already exists. '});
+                else
+                    return res.send(err);
+            }
+            res.json({success: true, message: 'Movie saved!'})
+        });
+    });
+
+router.route('/Movies/:moviesid')
+    .get(authJwtController.isAuthenticated, function (req, res) {
+        var id = req.params.moviesid;
+        Movie.findById(id, function (err, movie) {
+            if (err) res.send(err);
+            var movieJson = JSON.stringify(movie);
+            res.json(movieJson);
+        })
+        });
+
+router.route('/Movies')
+    .get(authJwtController.isAuthenticated, function (req, res) {
+    Movie.find(function (err, movies) {
+        if(err) res.send(err);
+        res.json(movies);
+    })
+    });
+
+app.use('/', router);
+app.listen(process.env.PORT || 7000);

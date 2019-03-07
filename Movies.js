@@ -19,20 +19,11 @@ var MoviesSchema = new Schema({
             enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'],
             require: true,
             },
-    Actors: {
-        FirstActor: [{
+    Actors:
+         [{
             ActorName: String,
             CharacterName: String,
-        }],
-        SecondActor: [{
-            ActorName: String,
-            CharacterName: String,
-        }],
-        ThirdActor: [{
-            ActorName: String,
-            CharacterName: String,
-        }],
-    },
+        }]
 });
 
 // return the model
