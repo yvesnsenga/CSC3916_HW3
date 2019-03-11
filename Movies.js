@@ -19,12 +19,7 @@ var MoviesSchema = new Schema({
             enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'],
             require: true,
             },
-    Actors:
-         [{
-            ActorName: String,
-            CharacterName: String,
-        }]
+    Actors: []
 });
-
 // return the model
 module.exports = mongoose.model('Movies', MoviesSchema);

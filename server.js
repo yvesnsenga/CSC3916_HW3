@@ -70,29 +70,6 @@ router.post('/signup', function(req, res) {
         });
     }
 });
-
-router.post('/signin', function(req, res) {
-    var userNew = new User();
-    userNew.name = req.body.name;
-    userNew.username = req.body.username;
-    userNew.password = req.body.password;
-
-    User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
-        if (err) res.send(err);
-
-        user.comparePassword(userNew.password, function(isMatch){
-            if (isMatch) {
-                var userToken = {id: user._id, username: user.username};
-                var token = jwt.sign(userToken, process.env.SECRET_KEY);
-                res.json({success: true, token: 'JWT ' + token});
-            }
-            else {
-                res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
-            }
-        });
-    });
-});
-
 router.route('/Movies')
     .post(authJwtController.isAuthenticated, function (req, res) {
         console.log(req.body);
@@ -100,10 +77,10 @@ router.route('/Movies')
         movies.title = req.body.title;
         movies.YearRelease = req.body.YearRelease;
         movies.genre = req.body.genre;
-        movies.Actor = [{
-            Actorname : req.body.Actorname,
-            CharacterName : req.body.CharacterName
-        }];
+        movies.Actors = req.body.Actors;
+        //movies.Actors = req.body.SecondActor;
+       // movies.Actors = req.body.ThirdActor;
+        //}];
         movies.save(function (err) {
             if (err) {
                 if (err.Code == 11000)
@@ -132,6 +109,64 @@ router.route('/Movies')
         res.json(movies);
     })
     });
+router.route('/Movies')
+    .put(authJwtController.isAuthenticated, function (req, res) {
+        Movie.FindOne({title: req.title}, function (err, movies) {
+            if(!err)
+            {
+                if(!movies){
+                    movies = new Movie();
+                    movies.title = req.title;
+                }
+                movies.status = req.status;
+                movies.save(function (err) {
+                    if(!err){
+                        console.log("Movies" + movies.title + "Updated at" + movies.updatedAt)
+                    }
+                    else{
+                        console.log("Error: Could not update movie" + movies.title)
+                    }
+                })
+            }
+        })
+    });
 
+router.route('/Movies')
+    .delete(authJwtController.isAuthenticated, function (req, res){
+        Movie.findOneAndDelete({title: req.body.title}, function (err, movie) {
+            if (err)
+            {
+                res.status(400).json({msg: err})
+            }
+            else if(movie == null)
+            {
+                res.json({msg : "Movie not found"})
+            }
+            else
+                res.json({msg :"The movie was deleted"})
+            })
+      });
+
+router.post('/signin', function(req, res) {
+    var userNew = new User();
+    userNew.name = req.body.name;
+    userNew.username = req.body.username;
+    userNew.password = req.body.password;
+
+    User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
+        if (err) res.send(err);
+
+        user.comparePassword(userNew.password, function(isMatch){
+            if (isMatch) {
+                var userToken = {id: user._id, username: user.username};
+                var token = jwt.sign(userToken, process.env.SECRET_KEY);
+                res.json({success: true, token: 'JWT ' + token});
+            }
+            else {
+                res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+            }
+        });
+    });
+});
 app.use('/', router);
 app.listen(process.env.PORT || 7000);
