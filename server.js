@@ -78,9 +78,6 @@ router.route('/Movies')
         movies.YearRelease = req.body.YearRelease;
         movies.genre = req.body.genre;
         movies.Actors = req.body.Actors;
-        //movies.Actors = req.body.SecondActor;
-       // movies.Actors = req.body.ThirdActor;
-        //}];
         movies.save(function (err) {
             if (err) {
                 if (err.Code == 11000)
@@ -109,26 +106,17 @@ router.route('/Movies')
         res.json(movies);
     })
     });
-router.route('/Movies')
+router.route('/Movies/:id')
     .put(authJwtController.isAuthenticated, function (req, res) {
-        Movie.FindOne({title: req.title}, function (err, movies) {
-            if(!err)
-            {
-                if(!movies){
-                    movies = new Movie();
-                    movies.title = req.title;
+        var conditions = {_id: req.params.id};
+        Movie.updateOne(conditions, req.body)
+            .then(mov => {
+                if (!mov) {
+                    return res.status(404).end();
                 }
-                movies.status = req.status;
-                movies.save(function (err) {
-                    if(!err){
-                        console.log("Movies" + movies.title + "Updated at" + movies.updatedAt)
-                    }
-                    else{
-                        console.log("Error: Could not update movie" + movies.title)
-                    }
-                })
-            }
-        })
+                return res.status(200).json({msg: "Movie updated"})
+            })
+        .catch(err => next(err))
     });
 
 router.route('/Movies')
