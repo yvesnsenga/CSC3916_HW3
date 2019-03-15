@@ -16,7 +16,7 @@ var MoviesSchema = new Schema({
         },
     YearRelease: Number,
     genre: {type: String,
-            enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'],
+            enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Fiction'],
             require: true,
             },
     Actors: []

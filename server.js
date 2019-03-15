@@ -141,19 +141,21 @@ router.post('/signin', function(req, res) {
     userNew.username = req.body.username;
     userNew.password = req.body.password;
 
-    User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
+    User.findOne({username: userNew.username}).select('name username password').exec(function (err, user) {
         if (err) res.send(err);
 
-        user.comparePassword(userNew.password, function(isMatch){
+        user.comparePassword(userNew.password, function (isMatch) {
             if (isMatch) {
                 var userToken = {id: user._id, username: user.username};
                 var token = jwt.sign(userToken, process.env.SECRET_KEY);
                 res.json({success: true, token: 'JWT ' + token});
-            }
-            else {
+            } else {
                 res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
             }
         });
+    });
+    router.all('*', function (res, req) {
+        req.json({error: 'Does not support the HTTP method'});
     });
 });
 app.use('/', router);
