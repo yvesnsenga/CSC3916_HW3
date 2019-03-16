@@ -11,13 +11,13 @@ mongoose.connection.once('open', function () {
 var MoviesSchema = new Schema({
     title: {
         type: String,
-        require: true,
+        required: true,
         index: {unique: true}
         },
     YearRelease: Number,
     genre: {type: String,
             enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Fiction'],
-            require: true,
+            required: true,
             },
     Actors: []
 });
