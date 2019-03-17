@@ -101,11 +101,9 @@ router.route('/Movies/:moviesid')
 
 router.route('/Movies/:title')
     .get(authJwtController.isAuthenticated, function (req, res) {
-        var movieTitle = req.body.title;
-        Movie.findOne(movieTitle, function (err, movie) {
+    Movie.find({title : req.body.title}, function (err, movies) {
             if (err) res.send(err);
-            var movieJson = JSON.stringify(movie);
-            res.json(movieJson);
+            res.json(movies);
         })
     });
 
