@@ -14,12 +14,20 @@ var MoviesSchema = new Schema({
         required: true,
         index: {unique: true}
         },
-    YearRelease: Number,
+    YearRelease:
+        {
+            type: Number,
+            required: true,
+        },
     genre: {type: String,
             enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Fiction'],
             required: true,
             },
-    Actors: []
+    Actors:
+        {
+            type: Array,
+            required: true,
+        },
 });
 // return the model
 module.exports = mongoose.model('Movies', MoviesSchema);
