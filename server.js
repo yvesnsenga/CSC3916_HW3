@@ -107,7 +107,7 @@ router.route('/Movies')
         })
     });
 
-router.route('/Movies')
+router.route('/MoviesAll')
     .get(authJwtController.isAuthenticated, function (req, res) {
     Movie.find(function (err, movies) {
         if(err) res.send(err);
