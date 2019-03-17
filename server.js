@@ -99,9 +99,9 @@ router.route('/Movies/:moviesid')
         })
         });
 
-router.route('/Movies/:title')
+router.route('/Movies')
     .get(authJwtController.isAuthenticated, function (req, res) {
-    Movie.find({title : req.body.title}, function (err, movies) {
+    Movie.findOne({title : req.body.title}, function (err, movies) {
             if (err) res.send(err);
             res.json(movies);
         })
